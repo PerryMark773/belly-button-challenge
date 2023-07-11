@@ -56,3 +56,30 @@ function optionChanged(sampleId) {
 
           });
         }
+        
+// Function to populate the dropdown menu with sample IDs
+function populateDropdown() {
+    var dropdown = d3.select("#selDataset");
+  
+    d3.json("https://2u-data-curriculum-team.s3.amazonaws.com/dataviz-classroom/v1.1/14-Interactive-Web-Visualizations/02-Homework/samples.json")
+      .then(function(data) {
+        var sampleIds = data.names;
+  
+        // Append options to the dropdown for each sample ID
+        sampleIds.forEach(function(id) {
+          dropdown.append("option")
+            .attr("value", id)
+            .text(id);
+        });
+  
+        // Initialize the chart with the first sample ID
+        var initialSampleId = sampleIds[0];
+        optionChanged(initialSampleId);
+      })
+      .catch(function(error) {
+        console.log("Error loading the JSON file:", error);
+      });
+  }
+  
+  // Call the function to populate the dropdown menu and display initial data
+  populateDropdown();
