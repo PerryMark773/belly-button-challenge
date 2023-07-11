@@ -28,5 +28,31 @@ function optionChanged(sampleId) {
   
         Plotly.newPlot("bar", [barTrace], barLayout);
 
+        // Retrieve the required data for the bubble chart
+      var otuIdsBubble = selectedSample.otu_ids;
+      var sampleValuesBubble = selectedSample.sample_values;
+      var otuLabelsBubble = selectedSample.otu_labels;
+
+      // Create the bubble chart
+      var bubbleTrace = {
+        x: otuIdsBubble,
+        y: sampleValuesBubble,
+        text: otuLabelsBubble,
+        mode: 'markers',
+        marker: {
+          size: sampleValuesBubble,
+          color: otuIdsBubble,
+          colorscale: 'Earth'
+        }
+      };
+
+      var bubbleLayout = {
+        title: 'Samples',
+        xaxis: { title: 'OTU IDs' },
+        yaxis: { title: 'Sample Values' }
+      };
+
+      Plotly.newPlot('bubble', [bubbleTrace], bubbleLayout);
+
           });
         }
