@@ -27,12 +27,12 @@ function optionChanged(sampleId) {
         };
   
         Plotly.newPlot("bar", [barTrace], barLayout);
-
+  
         // Retrieve the required data for the bubble chart
       var otuIdsBubble = selectedSample.otu_ids;
       var sampleValuesBubble = selectedSample.sample_values;
       var otuLabelsBubble = selectedSample.otu_labels;
-
+  
       // Create the bubble chart
       var bubbleTrace = {
         x: otuIdsBubble,
@@ -45,20 +45,40 @@ function optionChanged(sampleId) {
           colorscale: 'Earth'
         }
       };
-
+  
       var bubbleLayout = {
         title: 'Samples',
         xaxis: { title: 'OTU IDs' },
         yaxis: { title: 'Sample Values' }
       };
-
+  
       Plotly.newPlot('bubble', [bubbleTrace], bubbleLayout);
-
-          });
+  
+  
+      // Retrieve the metadata for the selected sample ID
+      var metadata = data.metadata;
+      var selectedMetadata = metadata.filter(meta => meta.id === parseInt(sampleId))[0];
+  
+      // Clear the existing metadata
+      var metadataPanel = d3.select("#sample-metadata");
+      metadataPanel.html("");
+  
+      // Display each key-value pair from the metadata JSON object
+      Object.entries(selectedMetadata).forEach(([key, value]) => {
+        metadataPanel.append("p").text(`${key}: ${value}`);
+      });
+  
+      // Update the gauge chart with the washing frequency
+      var wfreq = selectedMetadata.wfreq;
+      updateGaugeChart(wfreq);
+    })
+    .catch(function(error) {
+      console.log("Error loading the JSON file:", error);
+    });
         }
         
-// Function to populate the dropdown menu with sample IDs
-function populateDropdown() {
+  // Function to populate the dropdown menu with sample IDs
+  function populateDropdown() {
     var dropdown = d3.select("#selDataset");
   
     d3.json("https://2u-data-curriculum-team.s3.amazonaws.com/dataviz-classroom/v1.1/14-Interactive-Web-Visualizations/02-Homework/samples.json")
